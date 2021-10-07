@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>FormField</title>
+    <style>
+      select {
+        margin: 20px;
+        padding: 5px;
+        display: flex;
+        flex-direction: column;
+      }
+      .btn {
+        margin-left: 50px;
+        padding: 6px 6px;
+        background-color: blue;
+      }
+    </style>
+  </head>
+  <body onload="initializePage()">
+    <select id="myselect" onchange="businessCostChange()"></select>
+    <select id="myselect_1"></select>
+    <select id="myselect_2"></select>
+    <select id="myselect_3"></select>
+    <div class="button">
+      <button onclick=" Javascript:check();" class="btn" type="button">
+        Submit
+      </button>
+    </div>
+    <script>
+      // JSON file
+      const myjson = JSON.stringify([
+        {
+          name: "Business - Cost Estimating",
+          CertificationCategories: {
+            0: "Practitioner",
+            1: "Advanced",
+          },
+
+          ExperienceRequirement: {
+            0: "Less than 4 years",
+            1: "More than 4 years of acquisition experience in cost estimating supporting a program office, PEO, Service/Defense agencies, or supporting program(s) that report to a Service Acquisition Executive (SAE)",
+            2: "More than 6 years of acquisition experience in Cost Estimating and serving a program office, PEO, Service/Defense agency levels, or supporting program that reports to a SAE",
+          },
+          EducationRequirement: {
+            0: "No degree on hand",
+            1: "Research degree required.",
+            2: "24 semester hours in specified curricula",
+          },
+          Levels: {
+            0: "Conversion to Practitioner if completed BCF 230 or predecessor(s) or equivalent (when satisfy experience requirements)",
+            1: " Conversion to        Practitioner (when        satisfy experience        requirements)",
+            2: "Conversion to Advanced (when        satisfy experience requirements)",
+          },
+          condi: {
+            Level1: {
+              Lessthan4years: "Not Grandfathered",
+              "Morethan4yearsofacquisitionexperienceincostestimatingsupportingaprogramoffice,PEO,Service/Defenseagencies,orsupportingprogram(s)thatreporttoaServiceAcquisitionExecutive(SAE)":
+                "Practitioner",
+              "Morethan6yearsofacquisitionexperienceinCostEstimatingandservingaprogramoffice,PEO,Service/Defenseagencylevels,orsupportingprogramthatreportstoaSAE":
+                "Practitioner",
+            },
+            Level2: {
+              Lessthan4years: "Not Grandfathered",
+              "Morethan4yearsofacquisitionexperienceincostestimatingsupportingaprogramoffice,PEO,Service/Defenseagencies,orsupportingprogram(s)thatreporttoaServiceAcquisitionExecutive(SAE)":
+                "Practitioner",
+              "Morethan6yearsofacquisitionexperienceinCostEstimatingandservingaprogramoffice,PEO,Service/Defenseagencylevels,orsupportingprogramthatreportstoaSAE":
+                "Practitioner",
+            },
+            Level3: {
+              Lessthan4years: "Not Grandfathered",
+              "Morethan4yearsofacquisitionexperienceincostestimatingsupportingaprogramoffice,PEO,Service/Defenseagencies,orsupportingprogram(s)thatreporttoaServiceAcquisitionExecutive(SAE)":
+                "Advanced",
+              "Morethan6yearsofacquisitionexperienceinCostEstimatingandservingaprogramoffice,PEO,Service/Defenseagencylevels,orsupportingprogramthatreportstoaSAE":
+                "Advanced",
+            },
+          },
+        },
+        {
+          name: "Business - Financial Management",
+          CertificationCategories: {
+            0: "Practitioner",
+            1: "Advanced",
+          },
+
+          ExperienceRequirement: {
+            0: "Less than 4 years",
+            1: "Equal or More than 4 years",
+            2: "Equal or More than 6 yrs. relevant acquisition experience in an advanced acquisition financial management position within an ACAT I/II program office or Business System Category I, PEO, or Service/Component/Headquarters/e quivalent level according to Servicesprocesses.",
+          },
+          EducationRequirement: {
+            0: "No degree required for certification ",
+          },
+          Levels: {
+            0: "Not applicable for conversion",
+            1: " Conversion to Practitioner",
+            2: "Conversion to Practitioner; Conversion to Advanced if > 6 years  experience in acquisition financial  management leadership billet",
+          },
+          condi: {
+            Level1: {
+              Lessthan4years: "Not Grandfathered",
+              EqualorMorethan4years: "Not Grandfathered",
+              "EqualorMorethan6yrs.relevantacquisitionexperienceinanadvancedacquisitionfinancialmanagementpositionwithinanACATI/IIprogramofficeorBusinessSystemCategoryI,PEO,orService/Component/Headquarters/equivalentlevelaccordingtoServicesprocesses.":
+                "Not Grandfathered",
+            },
+            Level2: {
+              Lessthan4years: "Not Grandfathered",
+              EqualorMorethan4years: "Practitioner",
+              "EqualorMorethan6yrs.relevantacquisitionexperienceinanadvancedacquisitionfinancialmanagementpositionwithinanACATI/IIprogramofficeorBusinessSystemCategoryI,PEO,orService/Component/Headquarters/equivalentlevelaccordingtoServicesprocesses.":
+                "Practitioner",
+            },
+            Level3: {
+              Lessthan4years: "Not Grandfathered",
+              EqualorMorethan4years: "Practitioner",
+              "EqualorMorethan6yrs.relevantacquisitionexperienceinanadvancedacquisitionfinancialmanagementpositionwithinanACATI/IIprogramofficeorBusinessSystemCategoryI,PEO,orService/Component/Headquarters/equivalentlevelaccordingtoServicesprocesses.":
+                "Advanced",
+            },
+          },
+        },
+        {
+          name: "Contracting",
+          CertificationCategories: {
+            0: "Foundational",
+          },
+          ExperienceRequirement: {
+            0: "No experience",
+            1: "Twelve months full time experience applying a representative sample of the Contracting common competencies",
+          },
+          EducationRequirement: {
+            0: "No degree required for certification ",
+          },
+          Levels: {
+            0: "Conversion to DoD Contracting Professional NOTE: If certified in PUR or ICPM (any level) & acq-coded into the CON Functional Area, convert to Contracting Professional Certification",
+          },
+          condi: {
+            Level1: {
+              Noexperience: "Not Grandfathered",
+              TwelvemonthsfulltimeexperienceapplyingarepresentativesampleoftheContractingcommoncompetencies:
+                "Contracting Career Professional",
+            },
+          },
+        },
+        {
+          name: "Engineering & Technical Management",
+          CertificationCategories: {
+            0: "Foundational",
+            1: "Advanced",
+          },
+          ExperienceRequirement: {
+            0: "No experience or less than one year experience",
+            1: "One year of acquisition experience in Engineering and Technical Management",
+            2: "Four years of acquisition experience in Engineering and Technical Management",
+          },
+          EducationRequirement: {
+            0: "No degree required for certification ",
+          },
+          Levels: {
+            0: "ENG, IT, S&TM, PQM Level I, conversion to Foundational",
+            "1 ": "ENG, IT, S&TM Level II,conversion to Practitioner PQM Level II conversion to Foundational",
+            2: "ENG, IT, S&TM, or PQM Level III, conversion to Practitioner",
+          },
+          condi: {
+            Level1: {
+              Noexperienceorlessthanoneyearexperience: "Not Grandfathered",
+              OneyearofacquisitionexperienceinEngineeringandTechnicalManagement:
+                "Foundational",
+              FouryearsofacquisitionexperienceinEngineeringandTechnicalManagement:
+                "Foundational",
+            },
+            Level2: {
+              Noexperienceorlessthanoneyearexperience: "Not Grandfathered",
+              OneyearofacquisitionexperienceinEngineeringandTechnicalManagement:
+                "Foundational",
+              FouryearsofacquisitionexperienceinEngineeringandTechnicalManagement:
+                "Practitioner",
+            },
+            Level3: {
+              Noexperienceorlessthanoneyearexperience: "Not Grandfathered",
+              OneyearofacquisitionexperienceinEngineeringandTechnicalManagement:
+                "Practitioner",
+              FouryearsofacquisitionexperienceinEngineeringandTechnicalManagement:
+                "Practitioner",
+            },
+          },
+        },
+        {
+          name: "Life Cycle Logistics",
+          CertificationCategories: {
+            0: "Foundational",
+            1: "Advanced",
+          },
+          ExperienceRequirement: {
+            0: "Less than two years",
+            1: "Two years of relevant acquisition experience in Life Cycle Logistics",
+            2: "Five years of relevant acquisition experience in Life Cycle Logistics",
+          },
+          EducationRequirement: {
+            0: "No degree required for certification",
+          },
+          Levels: {
+            0: "Auto conversion to Foundational",
+            1: "Auto conversion to Advanced",
+          },
+          condi: {
+            Level1: {
+              Lessthantwoyears: "Not Grandfathered",
+              TwoyearsofrelevantacquisitionexperienceinLifeCycleLogistics:
+                "Foundationer",
+              FiveyearsofrelevantacquisitionexperienceinLifeCycleLogistics:
+                "Foundational",
+            },
+            Level2: {
+              Lessthantwoyears: "Not Grandfathered",
+              TwoyearsofrelevantacquisitionexperienceinLifeCycleLogistics:
+                "Advanced",
+              FiveyearsofrelevantacquisitionexperienceinLifeCycleLogistics:
+                "Advanced",
+            },
+          },
+        },
+        {
+          name: "Program Management",
+          CertificationCategories: {
+            0: "Practitioner",
+            1: "Advanced",
+          },
+          ExperienceRequirement: {
+            0: "Less than years",
+            1: "four years of relevant acquisition experience in Program Management",
+            2: "eight years of relevant acquisition experience in Program Management (at least 2 yrs with cost, schedule, and performance responsibilities in a program office or similar organization)",
+          },
+          EducationRequirement: {
+            0: "Technical degree preferred",
+          },
+          Levels: {
+            0: "Not applicable for conversion",
+            1: "Auto conversion to Practitioner",
+            2: "Less than 8 yrs experience auto convert to Practitioner unless position designated as ACAT PM, DPM, PEO, or similar, then convert to Advanced; 8 yrs experience auto convert to Advanced",
+          },
+          condi: {
+            Level1: {
+              Lessthanyears: "Not Grandfathered",
+              fouryearsofrelevantacquisitionexperienceinProgramManagement:
+                "Not Grandfathered",
+              "eightyearsofrelevantacquisitionexperienceinProgramManagement(atleast2yrswithcost,schedule,andperformanceresponsibilitiesinaprogramofficeorsimilarorganization)":
+                "Not Grandfathered",
+            },
+            Level2: {
+              Lessthanyears: "Not Grandfathered",
+              fouryearsofrelevantacquisitionexperienceinProgramManagement:
+                "Practitioner",
+              "eightyearsofrelevantacquisitionexperienceinProgramManagement(atleast2yrswithcost,schedule,andperformanceresponsibilitiesinaprogramofficeorsimilarorganization)":
+                "Practitioner",
+            },
+            Level3: {
+              Lessthanyears: "Not Grandfathered",
+              fouryearsofrelevantacquisitionexperienceinProgramManagement:
+                "Practitioner",
+              "eightyearsofrelevantacquisitionexperienceinProgramManagement(atleast2yrswithcost,schedule,andperformanceresponsibilitiesinaprogramofficeorsimilarorganization)":
+                "Advanced",
+            },
+          },
+        },
+        {
+          name: "Test & Evaluation",
+          CertificationCategories: {
+            0: "Practitioner",
+            1: "Advanced",
+          },
+          ExperienceRequirement: {
+            0: "Less than four years",
+            1: "four years of relevant acquisition experience in Program Management",
+            2: "eight years of relevant acquisition experience in Program Management (at least 2 yrs with cost, schedule, and performance responsibilities in a program office or similar organization)",
+          },
+          EducationRequirement: {
+            0: "No Degree required for certification",
+          },
+          Levels: {
+            0: "Not applicable for conversion",
+            1: "Auto conversion to Practitioner",
+            2: "Less than 8 yrs experience auto convert to Practitioner unless position designated as ACAT PM, DPM, PEO, or similar, then convert to Advanced; 8 yrs experience auto convert to Advanced",
+          },
+          condi: {
+            Level1: {
+              Lessthanfouryears: "Not Grandfathered",
+              fouryearsofrelevantacquisitionexperienceinProgramManagement:
+                "Foundational",
+              "eightyearsofrelevantacquisitionexperienceinProgramManagement(atleast2yrswithcost,schedule,andperformanceresponsibilitiesinaprogramofficeorsimilarorganization)":
+                "Foundational",
+            },
+            Level2: {
+              fouryearsofrelevantacquisitionexperienceinProgramManagement:
+                "Practitioner",
+              "eightyearsofrelevantacquisitionexperienceinProgramManagement(atleast2yrswithcost,schedule,andperformanceresponsibilitiesinaprogramofficeorsimilarorganization)":
+                "Practitioner",
+            },
+            Level3: {
+              fouryearsofrelevantacquisitionexperienceinProgramManagement:
+                "Practitioner",
+              "eightyearsofrelevantacquisitionexperienceinProgramManagement(atleast2yrswithcost,schedule,andperformanceresponsibilitiesinaprogramofficeorsimilarorganization)":
+                "Practitioner",
+            },
+          },
+        },
+      ]);
+
+      const obj = JSON.parse(myjson);
+      let experience_req;
+      let education_req;
+      let levels;
+      let store;
+      document.getElementById("myselect").innerHTML = "";
+      document.getElementById("myselect_1").innerHTML = "";
+      document.getElementById("myselect_2").innerHTML = "";
+      document.getElementById("myselect_3").innerHTML = "";
+
+      //For Functional Area
+      function initializePage() {
+        let name;
+        name += "<option value=''></option>";
+        obj.forEach((value) => {
+          console.log("checkvalues", value.name);
+          let area = value.name;
+          name += "<option value='" + area + "'>" + area + "</option>";
+        });
+        document.getElementById("myselect").innerHTML = name;
+      }
+
+      //Storing remaining fields data using filter
+      function businessCostChange() {
+        let selectvalue = document.getElementById("myselect").value;
+        console.log("hhh", selectvalue);
+        console.log(document.getElementById("myselect"));
+        let filter2obj = obj.filter((item) => item.name === selectvalue)[0];
+        console.log("filtered object", filter2obj);
+        let eduobj = Object.values(filter2obj.EducationRequirement);
+        let expobj = Object.values(filter2obj.ExperienceRequirement);
+        let levelobj = Object.keys(filter2obj.condi);
+        education_req = null;
+        experience_req = null;
+        levels = null;
+        setDropdown(eduobj, expobj, levelobj);
+      }
+
+      //Appending the fields 'ExperienceRequirement','EducationRequirement','Levels' using map function
+      function setDropdown(eduobj, expobj, levelobj) {
+        console.log("hii", eduobj);
+        console.log("bye", expobj);
+        console.log("available", levelobj);
+        document.getElementById("myselect_1").innerHTML = "";
+        document.getElementById("myselect_2").innerHTML = "";
+        document.getElementById("myselect_3").innerHTML = "";
+        education_req += "<option value=''></option>";
+        experience_req += "<option value=''></option>";
+        levels += "<option value=''></option>";
+
+        eduobj.map((item) => {
+          education_req += "<option value='" + item + "'>" + item + "</option>";
+        });
+        document.getElementById("myselect_1").innerHTML = education_req;
+        expobj.map((item) => {
+          experience_req +=
+            "<option value='" + item + "'>" + item + "</option>";
+        });
+        document.getElementById("myselect_2").innerHTML = experience_req;
+        levelobj.map((item) => {
+          levels += "<option value='" + item + "'>" + item + "</option>";
+        });
+        document.getElementById("myselect_3").innerHTML = levels;
+      }
+
+      //for declaring Result basis on the fields selected by users
+      function check() {
+        let key = document.getElementById("myselect").value;
+        let key1 = document.getElementById("myselect_1").value;
+        let key2 = document
+          .getElementById("myselect_2")
+          .value?.split(" ")
+          .join("");
+        let key3 = document.getElementById("myselect_3").value;
+        let result = obj.filter((item) => item.name === key)[0]?.condi[key3];
+        console.log(key2);
+        console.log(result);
+        let finalOutput = result[key2];
+        console.log(finalOutput);
+        if (finalOutput != null) {
+          window.alert(finalOutput);
+        }
+      }
+    </script>
+  </body>
+</html>
